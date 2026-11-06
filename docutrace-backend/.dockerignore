@@ -1,0 +1,8 @@
+.git
+.gitignore
+.env
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!target/*.jar
+*src/main/resources/*-secret.yml
+*.log

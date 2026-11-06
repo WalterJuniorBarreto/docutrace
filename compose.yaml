@@ -1,0 +1,63 @@
+name: docutrace-core
+
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+  db-net:
+    driver: bridge
+
+volumes:
+  oracle-data:
+
+services:
+  database:
+    image: gvenzl/oracle-free:23-slim-faststart
+    container_name: docutrace-db
+    environment:
+      - ORACLE_PASSWORD=${ORACLE_DB_PASSWORD}
+      - APP_USER=${ORACLE_DB_USER}
+      - APP_USER_PASSWORD=${ORACLE_DB_PASSWORD}
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    networks:
+      - db-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./docutrace-backend
+      dockerfile: Dockerfile
+    container_name: docutrace-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - ORACLE_DB_URL=jdbc:oracle:thin:@database:1521/FREEPDB1
+      - ORACLE_DB_USER=${ORACLE_DB_USER}
+      - ORACLE_DB_PASSWORD=${ORACLE_DB_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    networks:
+      - backend-net
+      - db-net
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./docutrace-frontend
+      dockerfile: Dockerfile
+    container_name: docutrace-frontend
+    ports:
+      - "4200:8080"
+    networks:
+      - frontend-net
+      - backend-net
+    depends_on:
+      - backend
