@@ -12,6 +12,6 @@ CREATE TABLE audit_event (
     CONSTRAINT fk_audit_organization FOREIGN KEY (organization_id) REFERENCES organization(id)
 );
 
-CREATE INDEX idx_audit_org_date ON audit_event(organization_id, created_at DES);
+CREATE INDEX idx_audit_org_date ON audit_event(organization_id, created_at DESc);
 CREATE INDEX idx_audit_actor ON audit_event(actor_id);
 CREATE INDEX idx_audit_action ON audit_event(action);
