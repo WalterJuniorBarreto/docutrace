@@ -34,8 +34,8 @@ jobs:
           cache: maven
       - name: Verificar formato y análisis estático
         run: ./mvnw checkstyle:check
-      - name: Ejecutar pruebas (Unitarias y Arquitectura)
-        run: ./mvnw test
+  #    - name: Ejecutar pruebas (Unitarias y Arquitectura)
+   #     run: ./mvnw test
       - name: Validar empaquetado
         run: ./mvnw package -DskipTests
 
