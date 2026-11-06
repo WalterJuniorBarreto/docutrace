@@ -80,7 +80,6 @@
 			<artifactId>flyway-database-oracle</artifactId>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-testcontainers</artifactId>
@@ -98,14 +97,13 @@
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -113,6 +111,30 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- Plugin Checkstyle con reglas Google -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<configLocation>google_checks.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>false</failsOnError>
+					<failOnViolation>false</failOnViolation>
+					<violationSeverity>warning</violationSeverity>
+					<includeTestSourceDirectory>false</includeTestSourceDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
